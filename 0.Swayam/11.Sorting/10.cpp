@@ -1,0 +1,1 @@
+/*givn two array , a=[1,5,8,10] an b=[2,,9,12,15,_,_,_,_] , merge two array suh that array a remain as it is an array b hav all lmnts of a an b in sort order*/

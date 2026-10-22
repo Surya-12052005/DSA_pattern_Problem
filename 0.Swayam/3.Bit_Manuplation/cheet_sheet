@@ -1,0 +1,60 @@
+#include <iostream>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+// 1. Function to convert decimal to binary
+string convert2Binary(int n) {
+    if (n == 0) {
+        return "0";
+    }
+
+    string res = "";
+
+    while (n != 0) {
+        if (n % 2 == 1) {
+            res += '1';
+        } else {
+            res += '0';
+        }
+
+        n = n / 2;
+    }
+
+    reverse(res.begin(), res.end());
+
+    return res;
+}
+
+
+//2. Function to convert binary to decimal
+int convert2Decimal(string n) {
+    int len = n.length();
+    int p2 = 1;    //p2 reffered to as power of two.
+    int num = 0;
+
+    for (int i = len - 1; i >= 0; i--) {
+        if (n[i] == '1') {
+            num = num + p2;
+        }
+
+        p2 = p2 * 2;
+    }
+
+    return num;
+}
+
+
+
+// Main function
+int main() {
+    int n;
+
+    cout << "Enter a decimal number: ";
+    cin >> n;
+
+    cout << "Binary representation: "
+         << convert2Binary(n) << endl;
+
+    return 0;
+}
