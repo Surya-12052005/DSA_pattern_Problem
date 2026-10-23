@@ -1,153 +1,117 @@
+/*
+Print All Ancestors of a Given Node
+
+Question
+Write a C++ program to print all ancestors of a given node in a Binary Tree.
+
+             5
+           /   \
+          3     10
+         / \    / \
+        1   4  7   25
+       /       \
+      2         9
+
+
+For example, if the given node is:
+9
+
+Its ancestors are:
+7 10 5
+
+Because:
+
+5
+ \
+  10
+    \
+     7
+      \
+       9  */
+
 #include <iostream>
 using namespace std;
 
-struct Node {
+// Node of Binary Tree
+struct Node
+{
     int data;
     Node* left;
     Node* right;
 
-    Node(int value) {
+    Node(int value)
+    {
         data = value;
         left = NULL;
         right = NULL;
     }
 };
 
-//1.Preorder traversal(rLR)
-void preorder(Node* root) {
+// Function to print all ancestors of a given node
+bool PrintAncestors(Node* root, int target)
+{
+    // Base case
     if (root == NULL)
-        return;
-
-    cout << root->data << " ";  // Root
-    preorder(root->left);       // Left
-    preorder(root->right);      // Right
-}
-
-//2.Inorder traversal
-void inorder(Node* x) {
-    if (x == NULL)
-        return;
-
-    inorder(x->left);           // LEFT
-    cout << x->data << " ";     // ROOT
-    inorder(x->right);          // RIGHT
-}
-
-//3.postorder traversal
-void postorder(Node* x) {
-    if (x == NULL)
-        return;
-
-    postorder(x->left);         // LEFT
-    postorder(x->right);        // RIGHT
-    cout << x->data << " ";     // ROOT
-}
-
-
-// 4.Recursive function to count nodes
-int countNodes(Node* x) {
-
-    // Base case
-    if (x == NULL)
-        return 0;
-
-    // Count left subtree
-    int leftCount = countNodes(x->left);
-
-    // Count right subtree
-    int rightCount = countNodes(x->right);
-
-    // Current node + left + right
-    return 1 + leftCount + rightCount;
-}
-
-// 5.Recursive function to COUNT NODES HAVING ONLY RIGHT CHILD
-int countRightChild(Node* x) {
-
-    // Base case
-    if (x == NULL)
-        return 0;
-
-    // Count left and right subtree
-    int leftCount = countRightChild(x->left);
-    int rightCount = countRightChild(x->right);
-
-    // Check if current node has ONLY right child      
-    if (x->left == NULL && x->right != NULL)
-        return 1 + leftCount + rightCount;
-
-    return leftCount + rightCount;
-}
-
-//Recursive function to find HEIGHT OF A BINARY TREE
-int getHeight(Node* x) {
-    if (x == NULL)
-        return 0;
-
-    int leftHeight = getHeight(x->left);
-    int rightHeight = getHeight(x->right);
-
-    return 1 + max(leftHeight, rightHeight);
-}
-
-//7. Recursive function to SEARCH A VALUE IN A BINARY TREE
-bool search(Node* x, int val) {
-
-    // Base case: tree is empty
-    if (x == NULL)
         return false;
 
-    // If current node contains the value
-    if (x->data == val)
+    // If current node is the target,
+    // it is not its own ancestor
+    if (root->data == target)
         return true;
 
     // Search in left subtree
-    if (search(x->left, val))     
+    if (PrintAncestors(root->left, target))  
+    {
+        cout << root->data << " ";
         return true;
+    }
 
     // Search in right subtree
-    return search(x->right, val);   
-}  
+    if (PrintAncestors(root->right, target))
+    {
+        cout << root->data << " ";
+        return true;
+    }
 
-int main() {
-    Node* root = new Node(1);
-    root->left = new Node(2);
-    root->right = new Node(3);
-    root->left->left = new Node(4);
-    root->left->right = new Node(5);
+    // Target not found in this subtree  
+    return false;
+}
 
-    cout << "Preorder Traversal: ";
-    preorder(root);
+int main()
+{
+    /*
+                 5
+               /   \
+              3     10
+             / \    / \
+            1   4  7   25
+           /       \
+          2         9
+    */
 
-    cout << "inorder Traversal: ";
-    inorder(root);
+    // Creating the binary tree
+    Node* root = new Node(5);
 
-    cout << "postorder Traversal: ";
-    postorder(root);
+    root->left = new Node(3);
+    root->right = new Node(10);
 
-    cout << "Total number of nodes: " << countNodes(root) << endl;
+    root->left->left = new Node(1);
+    root->left->right = new Node(4);
 
-    cout << "Nodes having only right child: " << countRightChild(root) << endl;
+    root->right->left = new Node(7);
+    root->right->right = new Node(25);
 
+    root->left->left->left = new Node(2);
+    root->right->left->right = new Node(9);
 
-    //Value to search
-    int val;
+    // Node whose ancestors we want to print
+    int target = 9;
 
-    cout << "Enter value to search: ";
-    cin >> val;
+    cout << "Ancestors of " << target << " are: ";
 
-     // Call search function
-    bool result = search(root, val);
+    PrintAncestors(root, target);
 
-    // Display result
-    if (result)
-        cout << "Value " << val << " is present in the Binary Tree." << endl;
-    else
-        cout << "Value " << val << " is NOT present in the Binary Tree." << endl;
-
-
-    cout << "Hight of Binary Tree: "<< getHeight(root) <<endl;
-    
+    cout << endl;
 
     return 0;
 }

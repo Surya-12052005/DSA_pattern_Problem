@@ -37,7 +37,7 @@ Steps of the approach
         
 Right side view: 1 → 3 → 4*/
 
-
+//#include <bits/stdc++.h>
 #include <iostream>
 #include <vector>
 #include <queue>
@@ -67,7 +67,7 @@ vector<int> rightSideView(TreeNode* root) {
 ///itterate over the levels.
     while (!q.empty()) {
         int size = q.size();                      // size = 1  (one node on level 0)
-//itterate over the queue.
+//itterate over the queue.                         //The main problem is inside the rightside() function: you are using q.size() in the loop condition  ->  You should store the current level's size in int size = q.size() before starting the loop.
         for (int i = 0; i < size; i++) {         //i = 0
             TreeNode* node = q.front();          // node = q.front() gives node 1, 
             q.pop();                             // q.pop() leaves q = []

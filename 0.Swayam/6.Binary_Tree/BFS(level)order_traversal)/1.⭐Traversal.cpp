@@ -17,8 +17,10 @@ Output:
 
 5 3 10 1 4 7 25 2 9 */
 
-#include <iostream>
-#include <queue>
+
+//#include <iostream>
+//#include <queue>
+#include <bits/stdc++.h>
 using namespace std;
 
 class Node {

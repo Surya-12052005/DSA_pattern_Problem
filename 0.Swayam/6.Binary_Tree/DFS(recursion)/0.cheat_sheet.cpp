@@ -1,258 +1,368 @@
-#include <iostream>
+#include <bits/stdc++.h>
 using namespace std;
 
-struct Node {
+struct Node{
     int data;
     Node* left;
     Node* right;
-
-    Node(int value) {
-        data = value;
-        left = NULL;
-        right = NULL;
+    
+    Node(int val){
+        data=val;
+        left=NULL;
+        right=NULL;
     }
 };
 
-//1.Preorder traversal(rLR)
-void preorder(Node* root) {
+//1.Preorder Traversal
+void Preorder(Node* root){
+    if(root==NULL) return;
+    
+    cout<<root->data;
+    Preorder(root->left);
+    Preorder(root->right);
+}
+
+//2.inorder Traversal
+void inorder(Node* root){
+    if(root==NULL) return;
+    
+    inorder(root->left);
+    cout<<root->data;
+    inorder(root->right);
+}
+
+//3.Postorder Traversal
+void Postorder(Node* root){
+    if(root==NULL) return;
+    
+    Postorder(root->left);
+    Postorder(root->right);
+    cout<<root->data;
+}
+
+//4.countNodes
+int countNodes(Node* root){
+    if(root==NULL) return 0;
+    return 1+countNodes(root->left)+countNodes(root->right);
+}
+
+//5.COUNT NODES HAVING ONLY RIGHT CHILD
+int countRight(Node* root){
+    if(root==NULL) return 0;
+    if(root->left==NULL && root->right!=NULL)
+    return 1+countRight(root->left)+countRight(root->right);
+    
+    return countRight(root->left)+countRight(root->right);
+}
+
+//6.HEIGHT OF A BINARY TREE
+int maxHeight(Node* root){
+    if(root==NULL) return 0;
+    
+    return 1 + max(maxHeight(root->left),maxHeight(root->right));
+}
+
+//7. SEARCH A VALUE IN A BINARY TREE
+bool Search(Node* root, int val) {
     if (root == NULL)
-        return;
-
-    cout << root->data << " ";  // Root
-    preorder(root->left);       // Left
-    preorder(root->right);      // Right
-}
-
-//2.Inorder traversal
-void inorder(Node* x) {
-    if (x == NULL)
-        return;
-
-    inorder(x->left);           // LEFT
-    cout << x->data << " ";     // ROOT
-    inorder(x->right);          // RIGHT
-}
-
-//3.postorder traversal
-void postorder(Node* x) {
-    if (x == NULL)
-        return;
-
-    postorder(x->left);         // LEFT
-    postorder(x->right);        // RIGHT
-    cout << x->data << " ";     // ROOT
-}
-
-
-// 4.Recursive function to count nodes
-int countNodes(Node* x) {
-
-    // Base case
-    if (x == NULL)
-        return 0;
-
-    // Count left subtree
-    int leftCount = countNodes(x->left);
-
-    // Count right subtree
-    int rightCount = countNodes(x->right);
-
-    // Current node + left + right
-    return 1 + leftCount + rightCount;
-}
-
-// 5.Recursive function to COUNT NODES HAVING ONLY RIGHT CHILD
-int countRightChild(Node* x) {
-
-    // Base case
-    if (x == NULL)
-        return 0;
-
-    // Count left and right subtree
-    int leftCount = countRightChild(x->left);
-    int rightCount = countRightChild(x->right);
-
-    // Check if current node has ONLY right child      
-    if (x->left == NULL && x->right != NULL)
-        return 1 + leftCount + rightCount;
-
-    return leftCount + rightCount;
-}
-
-//6.Recursive function to find HEIGHT OF A BINARY TREE
-int getHeight(Node* x) {
-    if (x == NULL)
-        return 0;
-
-    int leftHeight = getHeight(x->left);
-    int rightHeight = getHeight(x->right);
-
-    return 1 + max(leftHeight, rightHeight);
-}
-
-//7. Recursive function to SEARCH A VALUE IN A BINARY TREE
-bool search(Node* x, int val) {
-
-    // Base case: tree is empty
-    if (x == NULL)
         return false;
 
-    // If current node contains the value
-    if (x->data == val)
+    if (root->data == val)
         return true;
 
-    // Search in left subtree
-    if (search(x->left, val))     
+    if (Search(root->left, val))
         return true;
 
-    // Search in right subtree
-    return search(x->right, val);   
-}  
+    return Search(root->right, val);
+}
 
-//8. Recursive function to FIND LEVEL OF A VALUE
-int getLevel(Node* x, int val) {
 
-    // Base case
-    if (x == NULL)
+//8.FIND LEVEL OF A VALUE
+int level(Node* root, int val) {
+    if (root == NULL)
         return 0;
 
-    // If current node contains the value
-    if (x->data == val)
+    if (root->data == val)
         return 1;
 
-    // Search in left subtree
-    int leftLevel = getLevel(x->left, val);
+    int left = level(root->left, val);
+    if (left != 0)
+        return left + 1;
 
-    if (leftLevel != 0)
-        return leftLevel + 1;
+    int right = level(root->right, val);
+    if (right != 0)
+        return right + 1;
 
-    // Search in right subtree
-    int rightLevel = getLevel(x->right, val);
-
-    if (rightLevel != 0)
-        return rightLevel + 1;
-
-    // Value not found
     return 0;
 }
 
-// 9.Recursive function to create mirror
-void mirrorImage(Node*& x) {
-
-    // Base case
-    if (x == NULL)
+//9.CREATE THE MIRROR IMAGE OF A BINARY TREE
+void mirrorimage(Node* root) {
+    if (root == NULL)
         return;
 
-    // Swap left and right children
-    Node* temp = x->left;
-    x->left = x->right;
-    x->right = temp;
+    Node* temp = root->left;
+    root->left = root->right;
+    root->right = temp;
 
-    // Mirror left subtree
-    mirrorImage(x->left);
-
-    // Mirror right subtree
-    mirrorImage(x->right);
+    mirrorimage(root->left);
+    mirrorimage(root->right);
 }
 
-//10. Recursive function to check mirror
-bool isMirror(Node* x, Node* y){
-
-    // Both trees are empty
-    if (x == NULL && y == NULL)
+//10.CHECK WHETHER TWO BINARY TREES ARE MIRROR IMAGES
+bool isMirror(Node* p, Node* q) {
+    if (p == NULL && q == NULL)
         return true;
 
-    // One tree is empty, other is not
-    if (x == NULL || y == NULL)
+    if (p == NULL || q == NULL)
         return false;
 
-    // Values must be same
-    if (x->data != y->data)
+    if (p->data != q->data)
         return false;
 
-    // Cross comparison
-    return isMirror(x->left, y->right)
-        && isMirror(x->right, y->left);
+    return isMirror(p->left, q->right) &&
+           isMirror(p->right, q->left);
+}
+
+//11.Print All Root-to-Leaf Paths
+void printPaths(Node* root, vector<int>& path) {
+    if (root == NULL) {
+        return;
     }
+
+    // Add current node to path
+    path.push_back(root->val);
+
+    // If leaf node, print the path
+    if (root->left == NULL && root->right == NULL) {
+        for (int i = 0; i < path.size(); i++) {
+            cout << path[i] << " ";
+        }
+        cout << endl;
+    }
+
+    // Visit left subtree
+    printPaths(root->left, path);
+
+    // Visit right subtree
+    printPaths(root->right, path);
+
+    // Remove current node while backtracking
+    path.pop_back();
+}
+
+//12.Print All Ancestors of a Given Node
+bool printAncestors(Node* root, int target) {
+
+    if (root == NULL)
+        return false;
+
+    if (root->data == target)
+        return true;
+
+    if (printAncestors(root->left, target) ||
+        printAncestors(root->right, target)) {
+
+        cout << root->data << " ";
+        return true;
+    }
+
+    return false;
+}
+
+//13.Convert Binary Tree into Doubly Linked List
+void convertToDLL(Node* root, Node*& head, Node*& prev)
+{
+    // Base case
+    if (root == nullptr)
+        return;
+
+    // Step 1: Convert left subtree
+    convertToDLL(root->left, head, prev);
+
+    // Step 2: Process current node
+
+    // If this is the first node,
+    // it becomes the head of DLL
+    if (prev == nullptr)
+    {
+        head = root;
+    }
+    else
+    {
+        // Connect previous node with current node
+
+        // Previous node's next = current node
+        prev->right = root;
+
+        // Current node's previous = previous node
+        root->left = prev;
+    }
+
+    // Current node becomes previous node
+    prev = root;
+
+    // Step 3: Convert right subtree
+    convertToDLL(root->right, head, prev);
+}
+
+// Function to print DLL from left to right
+void printDLL(Node* head)
+{
+    Node* current = head;
+
+    while (current != nullptr)
+    {
+        cout << current->data;
+
+        if (current->right != nullptr)
+            cout << " <-> ";
+
+        current = current->right;
+    }
+
+    cout << endl;
+}
+
+
+//14.Same Tree (LeetCode 100)
+
+bool isSameTree(Node* p, Node* q) {
+
+    if (p == NULL && q == NULL)
+        return true;
+
+    if (p == NULL || q == NULL)
+        return false;
+
+    if (p->data != q->data)
+        return false;
+
+    return isSameTree(p->left, q->left) &&
+           isSameTree(p->right, q->right);
+}
+
+//15.Balanced Binary Tree
+int height(Node* root) {
+    if (root == NULL)
+        return 0;
+
+    int leftHeight = height(root->left);
+    int rightHeight = height(root->right); 
+
+    if (leftHeight == -1 || rightHeight == -1)
+        return -1;
+
+    if (abs(leftHeight - rightHeight) > 1)   // Current node is unbalanced
+        return -1;
+
+    return 1 + max(leftHeight, rightHeight);  // Return height of current subtree
+}
+
+bool isBalanced(Node* root) {
+    return height(root) != -1;  //This line means: If the height function does not return -1, the tree is balanced.
+}
+
+
+//16. Subtree of Another Tree (LeetCode 572)
+
+bool isSame(Node* p, Node* q) {
+
+    if (p == NULL && q == NULL)
+        return true;
+
+    if (p == NULL || q == NULL)
+        return false;
+
+    if (p->data != q->data)
+        return false;
+
+    return isSame(p->left, q->left) &&
+           isSame(p->right, q->right);
+}
+
+bool isSubtree(Node* p, Node* q) {
+
+    if (q == NULL)
+        return true;
+
+    if (p == NULL)
+        return false;
+
+    if (isSame(p, q))
+        return true;
+
+    return isSubtree(p->left, q) ||
+           isSubtree(p->right, q);
+}
+
+//17.Invert Binary Tree
+
+Node* invertTree(Node* root) {
+    if (root == NULL)
+        return NULL;
+
+    swap(root->left, root->right);
+
+    invertTree(root->left);
+    invertTree(root->right);
+
+    return root;
+}
+
+void levelOrder(Node* root) {
+    if (root == NULL)
+        return;
+
+    queue<Node*> q;     
+    q.push(root);
+
+    while (q.size() > 0) {
+        Node* temp = q.front();
+        q.pop();
+
+        cout << temp->data << " ";
+
+        if (temp->left != NULL)
+            q.push(temp->left);
+
+        if (temp->right != NULL)
+            q.push(temp->right);
+    }
+}
+
 
 
 int main() {
-    Node* root = new Node(1);
-    root->left = new Node(2);
-    root->right = new Node(3);
-    root->left->left = new Node(4);
-    root->left->right = new Node(5);
+	// your code goes here
 
-    //1.Preorder traversal(rLR)
-    cout << "Preorder Traversal: ";
-    preorder(root);
+	
+	Node* root=new Node(1);
+	root->left=new Node(2);
+	root->right=new Node(3);
+	root->left->left=new Node(4);
+	root->left->right=new Node(5);
+	root->right->right=new Node(6);
+	
 
-    //2.Inorder traversal
-    cout << "inorder Traversal: ";
-    inorder(root);
+    // Tree 1
+    Node* root1 = new Node(1);
+    root1->left = new Node(2);
+    root1->right = new Node(3);
+    root1->left->left = new Node(4);
+    root1->left->right = new Node(5);
 
-    //3.postorder traversal
-    cout << "postorder Traversal: ";
-    postorder(root);
+    // Tree 2
+    Node* root2 = new Node(1);
+    root2->left = new Node(2);
+    root2->right = new Node(3);
+    root2->left->left = new Node(4);
+    root2->left->right = new Node(5);
 
-    // 4.Recursive function to count nodes
-    cout << "Total number of nodes: " << countNodes(root) << endl;
-
-    // 5.Recursive function to COUNT NODES HAVING ONLY RIGHT CHILD
-    cout << "Nodes having only right child: " << countRightChild(root) << endl;
-
-    //6.Recursive function to find HEIGHT OF A BINARY TREE
-    cout << "Hight of Binary Tree: "<< getHeight(root)<<endl;
-    
-    //7. Recursive function to SEARCH A VALUE IN A BINARY TREE
-    //Value to search
-    int val;
-
-    cout << "Enter value to search: ";
-    cin >> val;
-
-     // Call search function
-    bool result = search(root, val);
-
-    // Display result
-    if (result)
-        cout << "Value " << val << " is present in the Binary Tree." << endl;
+    if(isSubtree(root1, root2))
+        cout << "YES";
     else
-        cout << "Value " << val << " is NOT present in the Binary Tree." << endl;
+        cout << "NO";
 
-
-
-    //8. Recursive function to FIND LEVEL OF A VALUE
-    // Value to search
-    int val;
-
-    cout << "Enter value: ";
-    cin >> val;
-
-    // Find level
-    int result = getLevel(root, val);
-
-    // Display result
-    if (result != 0)
-        cout << "Level of " << val << " is: " << result << endl;
-    else
-        cout << "Value " << val << " is not present in the Binary Tree." << endl;
-
-
-
-    // 9.Recursive function to create mirror
-    // Original tree
-    cout << "Original Preorder: ";
-    preorder(root);
-
-    // Create mirror
-    mirrorImage(root);
-
-    // Mirror tree
-    cout << "\nMirror Preorder: ";
-    preorder(root);
-
-
- 
     return 0;
 }
